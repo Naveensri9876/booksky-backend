@@ -7,7 +7,9 @@ const app = express();
 const PORT = 3000; // Directly use the port
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://booksky-frontend.onrender.com"  // allow only your frontend
+}));
 app.use(express.json());
 
 // Routes
