@@ -1,31 +1,34 @@
-// app.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
-const PORT = 3000; // Directly use the port
+const PORT = process.env.PORT || 3000;
 
-// Middleware
-const cors = require("cors");
+// ✅ Use CORS only once with correct origins
 app.use(cors({
-  origin: ["https://booksky-frontendd.onrender.com", "http://127.0.0.1:5500"]
+  origin: [
+    "https://booksky-frontend.onrender.com",  // Your actual deployed frontend
+    "http://127.0.0.1:5500"                   // Local development
+  ]
 }));
 
+// Middleware
 app.use(express.json());
 
 // Routes
 const bookRoutes = require("./routes/books");
 app.use("/api/books", bookRoutes);
 
-// MongoDB connection directly (NO .env)
-mongoose
-  .connect("mongodb+srv://Naveensri:naveensri@cluster0.uxlks.mongodb.net/booksky?retryWrites=true&w=majority&appName=Cluster0", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("✅ MongoDB Connected");
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-  })
-  .catch((err) => console.error("❌ MongoDB Error:", err));
+// MongoDB URI from environment
+const mongoURI = process.env.MONGODB_URI;
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log("✅ MongoDB Connected");
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+})
+.catch((err) => console.error("❌ MongoDB Error:", err));
