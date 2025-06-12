@@ -15,13 +15,10 @@ const bookRoutes = require("./routes/books");
 app.use("/api/books", bookRoutes);
 
 // MongoDB connection
-mongoose.connect(
-  "mongodb+srv://Naveensri:naveensri@cluster0.uxlks.mongodb.net/booksky?retryWrites=true&w=majority&appName=Cluster0",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-)
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 .then(() => {
   console.log("✅ MongoDB Connected");
   app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
